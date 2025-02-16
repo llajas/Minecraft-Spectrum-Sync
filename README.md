@@ -33,6 +33,7 @@ Before getting started, make sure you have the following:
 ```bash
 git clone https://github.com/llajas/minecraft-spectrum-sync.git
 cd minecraft-spectrum-sync
+```
 
 ## Contributing
 
