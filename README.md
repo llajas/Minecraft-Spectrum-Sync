@@ -31,8 +31,8 @@ Before getting started, make sure you have the following:
 
 ### **1️⃣ Clone this Repository**
 ```bash
-git clone https://github.com/llajas/minecraft-spectrum-updater.git
-cd minecraft-spectrum-updater
+git clone https://github.com/llajas/minecraft-spectrum-sync.git
+cd minecraft-spectrum-sync
 
 ## Contributing
 
