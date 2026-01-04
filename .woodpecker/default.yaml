@@ -1,11 +1,54 @@
 steps:
-  - name: docker-build
+  # =============================================================================
+  # Security Scanning - Runs on all branches/PRs
+  # =============================================================================
+  - name: scan-filesystem
+    image: woodpeckerci/plugin-trivy
+    settings:
+      exit-code: 1
+      severity: HIGH,CRITICAL
+      skip-dirs: vendor,node_modules,.git
+      dir: .
+    when:
+      event:
+        - push
+        - pull_request
+        - tag
+        - manual
+
+  # =============================================================================
+  # Tag Generation - Main branch only
+  # =============================================================================
+  - name: generate-tags
+    image: ghcr.io/dvjn/woodpecker-docker-tags-plugin
+    settings:
+      tags: |
+        raw --value latest
+        edge
+        semver --format {{major}}
+        semver --format {{major}}.{{minor}}
+        semver --format {{version}}
+        sha
+      tags_file: .tags
+    when:
+      branch: main
+      event:
+        - push
+        - tag
+        - manual
+        - cron
+      cron: "Rebuild"
+
+  # =============================================================================
+  # Image Build - Main branch only
+  # =============================================================================
+  - name: build-image
     image: woodpeckerci/plugin-docker-buildx
     settings:
       registry: https://registry.lajas.tech/v2/
-      repo: registry.lajas.tech/minecraft-spectrum-sync
-      dockerfile: Dockerfile
-      tags: latest
+      repo: registry.lajas.tech/cloudflare-spectrum-sync
+      dockerfile: Containerfile
+      tags_file: .tags
       username:
         from_secret: registry_username
       password:
@@ -14,5 +57,35 @@ steps:
       branch: main
       event:
         - push
+        - tag
+        - manual
         - cron
       cron: "Rebuild"
+    depends_on:
+      - generate-tags
+      - scan-filesystem
+
+  # =============================================================================
+  # Image Security Scanning - After build
+  # =============================================================================
+  - name: scan-image
+    image: woodpeckerci/plugin-trivy
+    settings:
+      exit-code: 0  # Don't fail build, just report
+      severity: HIGH,CRITICAL
+      image-ref: registry.lajas.tech/cloudflare-spectrum-sync:latest
+      registry-name: registry.lajas.tech
+      registry-username:
+        from_secret: registry_username
+      registry-password:
+        from_secret: registry_token
+    when:
+      branch: main
+      event:
+        - push
+        - tag
+        - manual
+        - cron
+      cron: "Rebuild"
+    depends_on:
+      - build-image

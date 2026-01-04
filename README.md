@@ -1,38 +1,42 @@
-# Minecraft Spectrum Sync
+# Cloudflare Spectrum Sync
 
-This repository contains a containerized script that **automatically updates the IP address** for a Cloudflare Spectrum Application, ensuring that your Minecraft server remains accessible even when its public IP changes.
+A containerized utility that **automatically updates the origin IP address** for Cloudflare Spectrum Applications, ensuring your services remain accessible even when the public IP changes.
 
-The updater runs as a **sidecar container** in the same Kubernetes Pod as your Minecraft server, automatically checking for IP changes and updating Cloudflare Spectrum accordingly.
+Runs as a **sidecar container** in a Kubernetes Pod, automatically detecting IP changes and updating Cloudflare Spectrum accordingly.
 
-## 🚀 Features
-- **Automatic IP Updates** – Detects changes to the server's public IP and updates Cloudflare Spectrum.
-- **Runs as a Sidecar** – Deploys in the same Pod as the Minecraft server for seamless integration.
-- **Uses Kubernetes Secrets** – API tokens are stored securely.
-- **Lightweight & Efficient** – Runs on an Alpine-based container with minimal resource usage.
-- **Idempotent Updates** – Only updates Cloudflare if the IP has changed; no unnecessary API calls.
+## Features
+- **Automatic IP Updates** - Detects changes to the server's public IP and updates Cloudflare Spectrum.
+- **Runs as a Sidecar** - Deploys in the same Pod as your service for seamless integration.
+- **Uses Kubernetes Secrets** - API tokens are stored securely.
+- **Lightweight & Efficient** - Runs on an Alpine-based container with minimal resource usage.
+- **Idempotent Updates** - Only updates Cloudflare if the IP has changed; no unnecessary API calls.
 
----
-
-## 🛠️ Prerequisites
-
-Before getting started, make sure you have the following:
+## Prerequisites
 
 - **A Cloudflare account**
 - **A Cloudflare API token** with the following permissions:
-    - **Zone → Zone Settings → Edit**
-    - **Zone → DNS → Edit**
-    - **Include → Specific Zone → {Your Domain}**
-- **A Kubernetes cluster** running your Minecraft server
-- **Docker installed** to build and push the updater container (or use an existing image)
+    - **Zone > Zone Settings > Edit**
+    - **Zone > DNS > Edit**
+    - **Include > Specific Zone > {Your Domain}**
+- **A Kubernetes cluster** running your service
+- **Docker installed** to build and push the container (or use an existing image)
 
----
+## Environment Variables
 
-## 🚀 Getting Started
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `API_TOKEN` | Yes | - | Cloudflare API token |
+| `ZONE_ID` | Yes | - | Cloudflare Zone ID |
+| `CUSTOM_DOMAIN` | Yes | - | Domain for the Spectrum application |
+| `SPECTRUM_PROTOCOL` | No | `tcp` | Protocol for the Spectrum application |
+| `SPECTRUM_PORT` | No | - | Port for the origin server |
 
-### **1️⃣ Clone this Repository**
+## Getting Started
+
+### Clone this Repository
 ```bash
-git clone https://github.com/llajas/minecraft-spectrum-sync.git
-cd minecraft-spectrum-sync
+git clone https://github.com/llajas/cloudflare-spectrum-sync.git
+cd cloudflare-spectrum-sync
 ```
 
 ## Contributing

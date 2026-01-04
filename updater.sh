@@ -4,8 +4,8 @@
 API_TOKEN="${API_TOKEN:?Missing API_TOKEN}"
 ZONE_ID="${ZONE_ID:?Missing ZONE_ID}"
 CUSTOM_DOMAIN="${CUSTOM_DOMAIN:?Missing CUSTOM_DOMAIN}"
-SPECTRUM_PROTOCOL="${SPECTRUM_PROTOCOL:-minecraft}"  # Default to Minecraft if not set
-SPECTRUM_PORT="${SPECTRUM_PORT:-25565}"  # Default port 25565
+SPECTRUM_PROTOCOL="${SPECTRUM_PROTOCOL:-tcp}"
+SPECTRUM_PORT="${SPECTRUM_PORT:?Missing SPECTRUM_PORT}"
 
 while true; do
   # Get current public IP

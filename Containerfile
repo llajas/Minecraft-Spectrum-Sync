@@ -13,7 +13,8 @@ RUN chmod +x /app/updater.sh
 ENV API_TOKEN=""
 ENV ZONE_ID=""
 ENV CUSTOM_DOMAIN=""
-ENV SPECTRUM_PORT="25565"
+ENV SPECTRUM_PROTOCOL=""
+ENV SPECTRUM_PORT=""
 
 # Run the script in a loop
 CMD ["/bin/bash", "/app/updater.sh"]
